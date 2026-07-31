@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculator Drum România → Grecia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#f5f2ed; --surface:#fff; --surface2:#f0ece5;
+  --border:rgba(0,0,0,0.1); --border-strong:rgba(0,0,0,0.18);
+  --text:#1a1814; --text2:#6b6560; --text3:#9c9690;
+  --accent:#2d5a3d; --accent-light:#e8f0eb; --accent-text:#1a3d26;
+  --blue:#1a3a5c; --blue-light:#e6eef5; --blue-text:#0e2540;
+  --amber:#7a4a0a; --amber-light:#fdf3e3; --amber-text:#5a3508;
+  --radius:14px; --radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+header{background:var(--text);color:#fff;padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:56px}
+.logo{font-family:'Instrument Serif',serif;font-size:18px;letter-spacing:-0.02em;color:#fff;display:flex;align-items:center;gap:10px}
+.logo span{color:rgba(255,255,255,0.45);font-style:italic}
+
+.hero{background:var(--text);color:#fff;padding:4rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 120%,rgba(45,90,61,0.35) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:1rem}
+.hero h1{font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,0.6)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 2rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:100px;padding:5px 14px;font-size:13px;color:rgba(255,255,255,0.7)}
+
+.container{max-width:980px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.form-card h2{font-family:'Instrument Serif',serif;font-size:1.25rem;font-weight:400;color:var(--text);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.field select,.field input[type=number]{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;-webkit-appearance:none;appearance:none}
+.field select:focus,.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,90,61,0.1)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.checkbox-row{display:flex;align-items:center;gap:10px;margin-top:1rem;font-size:14px;color:var(--text2);cursor:pointer}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+.calc-btn{width:100%;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:#fff;background:var(--text);border:none;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
+.calc-btn:hover{background:#2d2a25}
+.calc-btn:active{transform:scale(0.99)}
+.calc-btn:disabled{background:#9c9690;cursor:not-allowed}
+
+/* LOADING */
+.loading-box{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center;margin-top:1.5rem}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--text2)}
+.loading-step{font-size:13px;color:var(--text3);margin-top:6px}
+
+/* RESULTS */
+#results{display:none;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.recom-banner{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:14px;color:var(--text2);line-height:1.6;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.recom-banner strong{color:var(--text)}
+
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem}
+
+.route-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.04);display:flex;flex-direction:column;transition:box-shadow .2s}
+.route-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.09)}
+.route-card.is-cheapest{border-color:var(--accent);border-width:2px}
+.route-card.is-fastest{border-color:var(--blue);border-width:2px}
+
+.rc-header{padding:1.25rem 1.25rem .875rem}
+.rc-badge{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:100px;margin-bottom:.625rem}
+.badge-green{background:var(--accent-light);color:var(--accent-text)}
+.badge-blue{background:var(--blue-light);color:var(--blue-text)}
+.badge-gray{background:var(--surface2);color:var(--text3)}
+
+.rc-name{font-family:'Instrument Serif',serif;font-size:1.1rem;font-weight:400;color:var(--text);margin-bottom:2px}
+.rc-via{font-size:13px;color:var(--text3);margin-bottom:1rem}
+
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.met{background:var(--bg);border-radius:var(--radius-sm);padding:.625rem .75rem;text-align:center}
+.met-l{font-size:11px;color:var(--text3);margin-bottom:2px}
+.met-v{font-size:15px;font-weight:500;color:var(--text)}
+
+.rc-segs{border-top:1px solid var(--border)}
+.seg-row{display:flex;align-items:flex-start;gap:10px;padding:9px 1.25rem;border-bottom:1px solid var(--border);font-size:13px}
+.seg-row:last-child{border-bottom:none}
+.seg-flag{font-size:16px;min-width:22px}
+.seg-info{flex:1}
+.seg-name{font-weight:500;color:var(--text)}
+.seg-detail{color:var(--text3);font-size:12px;margin-top:1px}
+.seg-cost{font-weight:500;color:var(--text);white-space:nowrap}
+
+.rc-stops{border-top:1px solid var(--border);padding:1rem 1.25rem;background:var(--bg)}
+.stops-heading{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.75rem}
+.stop-item{display:flex;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid var(--border)}
+.stop-item:last-child{border-bottom:none}
+.stop-num{width:20px;height:20px;background:var(--surface);border:1px solid var(--border-strong);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--text2);flex-shrink:0;margin-top:1px}
+.stop-body{flex:1}
+.stop-name{font-weight:500;color:var(--text)}
+.stop-why{color:var(--text3);font-size:12px;margin-top:1px;line-height:1.45}
+
+.rc-map{border-top:1px solid var(--border);padding:.875rem 1.25rem}
+.map-btn{display:inline-flex;align-items:center;gap:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--blue);background:var(--blue-light);border:1px solid rgba(26,58,92,0.15);border-radius:100px;padding:7px 16px;text-decoration:none;transition:background .15s}
+.map-btn:hover{background:#d5e4f0}
+
+.rc-total{padding:1rem 1.25rem;border-top:1px solid var(--border);background:var(--surface);margin-top:auto}
+.total-main{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.total-label{font-size:14px;font-weight:500;color:var(--text)}
+.total-value{font-size:22px;font-weight:500;color:var(--text);font-family:'Instrument Serif',serif}
+.total-sub{font-size:12px;color:var(--text3)}
+
+.warn-bar{background:var(--amber-light);border:1px solid rgba(122,74,10,0.2);border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;color:var(--amber-text);margin-bottom:1rem;line-height:1.55}
+.error-bar{background:#fdf0f0;border:1px solid rgba(139,32,32,0.2);border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;color:#8b2020;margin-top:1rem}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+
+footer{text-align:center;padding:2rem;font-size:13px;color:var(--text3);border-top:1px solid var(--border)}
+
+@media(max-width:640px){
+  .grid2,.grid3,.compare-grid{grid-template-columns:1fr}
+  .hero{padding:2.5rem 1.25rem 2rem}
+  .container{padding:1.5rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span style="font-size:20px">🇷🇴🇧🇬🇬🇷</span> Drum<span>Spre Grecia</span></div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:500">Mart. 2026</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Calculator costuri drum auto</div>
+  <h1>România <em>spre</em> Grecia<br/>Calculează tot din avans</h1>
+  <p class="hero-sub">Combustibil, taxe, vignete, ferry și stopuri recomandate — două rute comparate cu distanțe reale.</p>
+  <div class="hero-chips">
+    <span class="chip">📍 Distanțe reale via OSRM</span>
+    <span class="chip">⛽ Prețuri actualizate</span>
+    <span class="chip">⛴️ Ferry inclus</span>
+    <span class="chip">🗺️ Hartă Google Maps</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-card">
+    <h2><span>🗺️</span> Configurează călătoria</h2>
+    <div class="grid2" style="margin-bottom:16px">
+      <div class="field">
+        <label>🇷🇴 Plecare din România</label>
+        <select id="origin">
+          <option value="bucuresti">București</option>
+          <option value="cluj">Cluj-Napoca</option>
+          <option value="timisoara">Timișoara</option>
+          <option value="iasi">Iași</option>
+          <option value="constanta">Constanța</option>
+          <option value="brasov">Brașov</option>
+          <option value="craiova">Craiova</option>
+          <option value="ploiesti">Ploiești</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>🇬🇷 Destinație în Grecia</label>
+        <select id="destination">
+          <option value="thessaloniki">Salonic (Thessaloniki)</option>
+          <option value="halkidiki">Halkidiki</option>
+          <option value="athens">Atena</option>
+          <option value="kavala">Kavala</option>
+          <option value="alexandroupoli">Alexandroupoli</option>
+          <option value="meteora">Meteora</option>
+          <option value="corfu">Corfu (via feribot)</option>
+          <option value="santorini">Santorini (via feribot)</option>
+          <option value="crete">Creta (via feribot)</option>
+          <option value="thassos">Thassos (via feribot)</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="field">
+        <label>Combustibil</label>
+        <select id="ftype">
+          <option value="benzina">Benzină</option>
+          <option value="motorina">Motorină</option>
+          <option value="electric">Electric / Hibrid</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Consum (l/100km)</label>
+        <input type="number" id="cons" value="7.5" min="3" max="20" step="0.5"/>
+      </div>
+      <div class="field">
+        <label>Nr. pasageri (ferry)</label>
+        <input type="number" id="pax" value="2" min="1" max="9"/>
+      </div>
+    </div>
+    <label class="checkbox-row">
+      <input type="checkbox" id="rov" checked/>
+      Am rovinietă anuală (nu o adaug în calcul)
+    </label>
+  </div>
+
+  <button class="calc-btn" id="calcBtn" onclick="calc()">
+    Compară rutele
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+
+  <div class="loading-box" id="loadingBox">
+    <div class="spinner"></div>
+    <div class="loading-text">Se calculează distanțele reale...</div>
+    <div class="loading-step" id="loadingStep">Se interogează rutele via OpenStreetMap</div>
+  </div>
+
+  <div id="errorBar"></div>
+
+  <div id="results">
+    <div class="divider"></div>
+    <div id="recomBanner" class="recom-banner"></div>
+    <div class="compare-grid" id="compareGrid"></div>
+    <div class="warn-bar">⚠️ Prețuri combustibil orientative (mart. 2026). Taxe autostradă Grecia actualizate ian. 2026 — sursa: <strong>nikana.gr</strong>. Distanțele calculate via OSRM/OpenStreetMap. Toate valorile sunt estimative.</div>
+  </div>
+</div>
+
+<footer>DrumSpreGrecia · Distanțe reale via OSRM · Mart. 2026</footer>
+
+<script>
+const EUR = 4.97;
+const FP = {
+  benzina:  { ro:9.20, bg:7.10, rs:7.80, mk:7.50, gr:9.50 },
+  motorina: { ro:10.10,bg:7.50, rs:8.20, mk:8.00, gr:8.20 },
+  electric: { ro:0,    bg:0,    rs:0,    mk:0,    gr:0    }
+};
+
+// Fuel price per km by country (weighted average price along route)
+// We compute fuel cost as: (totalKm / 100) * cons * weightedPrice
+// Weighted by approximate km split per country per route
+const COUNTRY_KM_SPLIT = {
+  // Bulgaria route: RO ~20%, BG ~55%, GR ~25%
+  bg_route:  { ro: 0.20, bg: 0.55, gr: 0.25 },
+  // Serbia+MK route: RO ~35%, RS ~30%, MK ~20%, GR ~15%
+  rs_route:  { ro: 0.35, rs: 0.30, mk: 0.20, gr: 0.15 },
+  // Coastal BG route: RO ~15%, BG ~60%, GR ~25%
+  coast_route: { ro: 0.15, bg: 0.60, gr: 0.25 }
+};
+
+// Coordinates for OSRM routing
+const COORDS = {
+  // Origins (Romania)
+  bucuresti:  [26.0979, 44.4268],
+  cluj:       [23.5899, 46.7712],
+  timisoara:  [21.2087, 45.7489],
+  iasi:       [27.5899, 47.1585],
+  constanta:  [28.6348, 44.1598],
+  brasov:     [25.5887, 45.6427],
+  craiova:    [23.7953, 44.3302],
+  ploiesti:   [26.0148, 44.9459],
+
+  // Waypoints
+  giurgiu:    [25.9699, 43.9037],
+  ruse:       [25.9545, 43.8564],
+  plovdiv:    [24.7469, 42.1354],
+  sofia:      [23.3219, 42.6977],
+  kulata:     [23.3703, 41.4684],
+  varna:      [27.9147, 43.2141],
+  burgas:     [27.4626, 42.5048],
+  durankulak: [28.5408, 43.6858],
+  calafat:    [22.9368, 43.9939],
+  nis:        [21.8954, 43.3209],
+  skopje:     [21.4314, 41.9981],
+  gevgelija:  [22.5021, 41.1397],
+  belgrade:   [20.4612, 44.8176],
+  deva:       [22.8993, 45.8833],
+  vidin:      [22.8799, 43.9914],
+  galati:     [28.0465, 45.4353],
+  pitesti:    [24.8703, 44.8565],
+  craiova_wp: [23.7953, 44.3302],
+
+  // Destinations (Greece)
+  thessaloniki:   [22.9444, 40.6401],
+  halkidiki:      [23.4316, 40.3185],
+  athens:         [23.7275, 37.9838],
+  kavala:         [24.4019, 40.9396],
+  alexandroupoli: [25.8741, 40.8453],
+  meteora:        [21.6306, 39.7217],
+  igoumenitsa:    [20.2637, 39.5030],  // for Corfu ferry
+  piraeus:        [23.6437, 37.9430],  // for Santorini/Crete ferry
+  keramoti:       [24.7019, 40.8450],  // for Thassos ferry
+};
+
+// Route definitions: waypoints array (coord keys) per origin+routeType
+const ROUTE_DEFS = {
+  bucuresti: {
+    main: {
+      label: 'Via Giurgiu – Sofia',
+      via: 'Bulgaria (A1)',
+      wps: ['bucuresti','giurgiu','plovdiv','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Giurgiu / Ruse (vamă)', why:'Trecere pod Prietenia — pregătește documentele, cozi variabile în weekend' },
+        { name:'Plovdiv, Bulgaria', why:'Stop ideal la mijlocul drumului — centrul vechi merită 30 de minute' },
+        { name:'Kulata / Promachonas (vamă GR)', why:'Ultimul punct de realimentare ieftină înainte de Grecia' },
+      ]
+    },
+    alt: {
+      label: 'Via Constanța – Varna (coastă)',
+      via: 'Ruta de coastă BG E87',
+      wps: ['bucuresti','constanta','durankulak','varna','burgas'],
+      split: 'coast_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Constanța (A2)', why:'Ultimul benzinar ieftin RO — fă plinul înainte de Bulgaria' },
+        { name:'Varna, Bulgaria', why:'Oraș mare pe coastă — masă, alimentare, plajă dacă ai timp' },
+        { name:'Burgas, Bulgaria', why:'Jumătatea rutei de coastă — stație fast food și alimentare' },
+      ]
+    }
+  },
+  brasov: {
+    main: {
+      label: 'Via Pitești – Giurgiu – Sofia',
+      via: 'Bulgaria (A1)',
+      wps: ['brasov','pitesti','giurgiu','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Pitești (A1)', why:'Ultimul nod major înainte de Giurgiu — masă sau alimentare' },
+        { name:'Sofia, Bulgaria', why:'Stop recomandat — centru modern, parcare ușoară, mâncare bună' },
+        { name:'Kulata (vamă GR)', why:'Alimentare BG înainte de taxele grecești mai mari' },
+      ]
+    },
+    alt: {
+      label: 'Via Craiova – Niș – Skopje',
+      via: 'Serbia + Macedonia de Nord',
+      wps: ['brasov','craiova_wp','calafat','nis','skopje','gevgelija'],
+      split: 'rs_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'Vignetă Serbia 7z', lei:15 }, { note:'Vignetă MK 7z', lei:10 }],
+      stops: [
+        { name:'Niș, Serbia', why:'Oprire ideală pentru masă — oraș mare cu parcare bună' },
+        { name:'Skopje, Macedonia de Nord', why:'Capitală compactă — refueling și pauză, bun pentru cazat noaptea' },
+        { name:'Gevgelija (vamă GR)', why:'Intrare în Grecia — schimb valutar dacă e nevoie' },
+      ]
+    }
+  },
+  cluj: {
+    main: {
+      label: 'Via Deva – Calafat – Serbia',
+      via: 'Serbia + Macedonia de Nord',
+      wps: ['cluj','deva','calafat','nis','skopje','gevgelija'],
+      split: 'rs_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'Vignetă Serbia 7z', lei:15 }, { note:'Vignetă MK 7z', lei:10 }],
+      stops: [
+        { name:'Deva (A1)', why:'Stop natural pentru pauză — cetatea Deva vizibilă de pe autostradă' },
+        { name:'Niș, Serbia', why:'Cel mai bun loc de cazare dacă faci drumul în 2 zile' },
+        { name:'Skopje, Macedonia de Nord', why:'Refueling și masă înainte de frontiera greacă' },
+      ]
+    },
+    alt: {
+      label: 'Via București – Sofia',
+      via: 'Bulgaria (mai lung, autostradă)',
+      wps: ['cluj','bucuresti','giurgiu','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'București (centura sudică)', why:'Ocolire recomandată — evită traficul din oraș' },
+        { name:'Sofia, Bulgaria', why:'Stop de noapte recomandat — hotel bun la prețuri rezonabile' },
+        { name:'Kulata (vamă GR)', why:'Alimentare finală la prețuri bulgărești' },
+      ]
+    }
+  },
+  timisoara: {
+    main: {
+      label: 'Via Moravița – Belgrad – Skopje',
+      via: 'Serbia + Macedonia de Nord',
+      wps: ['timisoara','belgrade','nis','skopje','gevgelija'],
+      split: 'rs_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'Vignetă Serbia 7z', lei:15 }, { note:'Vignetă MK 7z', lei:10 }],
+      stops: [
+        { name:'Belgrad, Serbia', why:'Primul stop major — alimentare, masă sau cazare dacă pleci dimineața' },
+        { name:'Niș, Serbia', why:'Jumătatea drumului prin Serbia — masă și pauză obligatorie' },
+        { name:'Skopje, Macedonia de Nord', why:'Ultimul stop mare înainte de Grecia' },
+      ]
+    },
+    alt: {
+      label: 'Via Calafat – Vidin – Sofia',
+      via: 'Bulgaria (drum mai lung)',
+      wps: ['timisoara','craiova_wp','calafat','vidin','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Craiova', why:'Stop opțional — benzinărie și masă înainte de Calafat' },
+        { name:'Sofia, Bulgaria', why:'Stop mare recomandat — hotel bun, mâncare ieftină' },
+        { name:'Kulata (vamă GR)', why:'Alimentare finală cu prețuri bulgărești' },
+      ]
+    }
+  },
+  craiova: {
+    main: {
+      label: 'Via Calafat – Niș – Skopje',
+      via: 'Serbia + Macedonia de Nord',
+      wps: ['craiova','calafat','nis','skopje','gevgelija'],
+      split: 'rs_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'Vignetă Serbia 7z', lei:15 }, { note:'Vignetă MK 7z', lei:10 }],
+      stops: [
+        { name:'Calafat (vamă RS)', why:'Feribot sau pod Calafat–Vidin — verifică programul feribotului' },
+        { name:'Niș, Serbia', why:'Stop central ideal — parcare mare, restaurante, hotel' },
+        { name:'Gevgelija (vamă GR)', why:'Intrare Grecia — realimentare la prețuri macedonene' },
+      ]
+    },
+    alt: {
+      label: 'Via Giurgiu – Plovdiv – Sofia',
+      via: 'Bulgaria',
+      wps: ['craiova','giurgiu','plovdiv','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Giurgiu (vamă BG)', why:'Trecere rapidă dacă nu sunt cozi — zi de săptămână e mai bine' },
+        { name:'Plovdiv, Bulgaria', why:'Cel mai frumos stop în Bulgaria — centru vechi UNESCO' },
+        { name:'Kulata (vamă GR)', why:'Alimentare finală cu prețuri bulgărești' },
+      ]
+    }
+  },
+  iasi: {
+    main: {
+      label: 'Via București – Giurgiu – Sofia',
+      via: 'Bulgaria (ruta clasică)',
+      wps: ['iasi','bucuresti','giurgiu','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'București (centura sudică)', why:'Ocolire obligatorie — evită 1-2h de trafic' },
+        { name:'Sofia, Bulgaria', why:'Cazare recomandată dacă pleci dimineața din Iași' },
+        { name:'Kulata (vamă GR)', why:'Benzinărie BG înainte de frontieră' },
+      ]
+    },
+    alt: {
+      label: 'Via Galați – Giurgiu',
+      via: 'Ruta prin sudul Moldovei',
+      wps: ['iasi','galati','giurgiu','plovdiv','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Galați', why:'Rută mai scurtă față de A1 — drum național, puțin mai lent' },
+        { name:'Plovdiv, Bulgaria', why:'Stop recomandat — jumătatea drumului BG, centru vechi UNESCO' },
+        { name:'Kulata (vamă GR)', why:'Alimentare finală ieftină' },
+      ]
+    }
+  },
+  constanta: {
+    main: {
+      label: 'Via Varna – Burgas (coastă)',
+      via: 'Ruta de coastă BG E87',
+      wps: ['constanta','durankulak','varna','burgas'],
+      split: 'coast_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Vama Veche / Durankulak', why:'Trecere rapidă de frontieră — rar aglomerată față de Giurgiu' },
+        { name:'Varna, Bulgaria', why:'Oraș mare pe coastă — masă, alimentare, frumos' },
+        { name:'Burgas, Bulgaria', why:'Al doilea stop de coastă — stații bune de carburant' },
+      ]
+    },
+    alt: {
+      label: 'Via București – Giurgiu – Sofia',
+      via: 'Bulgaria vest (drum mai lung)',
+      wps: ['constanta','bucuresti','giurgiu','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'București (centura sudică)', why:'Ocolire — nu intra în centru' },
+        { name:'Sofia, Bulgaria', why:'Stop de noapte recomandat pentru drum în 2 etape' },
+        { name:'Kulata (vamă GR)', why:'Alimentare înainte de Grecia' },
+      ]
+    }
+  },
+  ploiesti: {
+    main: {
+      label: 'Via Giurgiu – Plovdiv – Sofia',
+      via: 'Bulgaria (A1)',
+      wps: ['ploiesti','giurgiu','plovdiv','sofia','kulata'],
+      split: 'bg_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'E-vignetă BG 7z', lei:38 }],
+      stops: [
+        { name:'Giurgiu (vamă BG)', why:'Plecare devreme recomandat — pod aglomerat în weekend' },
+        { name:'Plovdiv, Bulgaria', why:'Stop la jumătate — centru vechi merită vizitat' },
+        { name:'Kulata (vamă GR)', why:'Ultimul stop BG — alimentare ieftină' },
+      ]
+    },
+    alt: {
+      label: 'Via Craiova – Niș – Skopje',
+      via: 'Serbia + Macedonia de Nord',
+      wps: ['ploiesti','craiova_wp','calafat','nis','skopje','gevgelija'],
+      split: 'rs_route',
+      tolls: [{ note:'Rovinietă 30z', lei:48, annual:true }, { note:'Vignetă Serbia 7z', lei:15 }, { note:'Vignetă MK 7z', lei:10 }],
+      stops: [
+        { name:'Craiova', why:'Stop opțional înainte de Calafat' },
+        { name:'Niș, Serbia', why:'Stop central — cazare ieftină dacă faci 2 zile' },
+        { name:'Skopje, Macedonia de Nord', why:'Ultimul stop mare — refueling și masă' },
+      ]
+    }
+  }
+};
+
+// Ferry destinations — final leg is by boat
+const DEST_FERRY = {
+  corfu:     { endPoint:'igoumenitsa', carEur:90,  passEur:20, dur:'2h',    name:'Corfu'     },
+  santorini: { endPoint:'piraeus',     carEur:180, passEur:55, dur:'8h',    name:'Santorini' },
+  crete:     { endPoint:'piraeus',     carEur:150, passEur:45, dur:'9h',    name:'Creta'     },
+  thassos:   { endPoint:'keramoti',    carEur:15,  passEur:4,  dur:'35min', name:'Thassos'   },
+};
+
+// Final destination coord (where car drives to before ferry, or final city)
+const DEST_COORD = {
+  thessaloniki:   'thessaloniki',
+  halkidiki:      'halkidiki',
+  athens:         'athens',
+  kavala:         'kavala',
+  alexandroupoli: 'alexandroupoli',
+  meteora:        'meteora',
+  corfu:          'igoumenitsa',
+  santorini:      'piraeus',
+  crete:          'piraeus',
+  thassos:        'keramoti',
+};
+
+const DEST_NAMES = {
+  thessaloniki:'Salonic', halkidiki:'Halkidiki', athens:'Atena',
+  kavala:'Kavala', alexandroupoli:'Alexandroupoli', meteora:'Meteora',
+  corfu:'Corfu', santorini:'Santorini', crete:'Creta', thassos:'Thassos'
+};
+
+// Tolls Greece by destination (EUR → LEI, real values Jan 2026 from nikana.gr)
+// Via Evzoni/Kulata (Bulgaria route): A1/PATHE
+// Via Gevgelija/Evzoni (Serbia+MK route): same entry point Evzoni
+// EUR * 4.97 = LEI
+const GR_TOLL_EUR = {
+  // A1 (E75) route — Evzoni entry
+  thessaloniki:   3.60,   // Evzoni 2.95 + bypass 0.65
+  halkidiki:      3.60,   // Evzoni 2.95 + bypass 0.65
+  kavala:         10.00,  // Evzoni + bypass + Analipsi + Asprovalta + Moustheni
+  thassos:        10.00,  // same as Kavala (ferry from Keramoti near Kavala)
+  athens:         39.60,  // Evzoni 2.95 + bypass 0.65 + Malgara 1.15 + A1 to Athens 34.85
+  meteora:        14.50,  // Evzoni → Larissa exit ~11.60 + Trikala ~2.90
+  alexandroupoli: 18.50,  // via Egnatia: Evzoni + full Egnatia east ~15.55
+  // Egnatia (A2) route — for western destinations
+  corfu:          15.90,  // Evzoni → Igoumenitsa via Egnatia
+  santorini:      39.60,  // via Athens (Piraeus)
+  crete:          39.60,  // via Athens (Piraeus)
+};
+const GR_TOLL = Object.fromEntries(
+  Object.entries(GR_TOLL_EUR).map(([k,v]) => [k, Math.round(v * EUR)])
+);
+
+// Google Maps waypoints strings for map link
+const MAP_WPS = {
+  bucuresti: { main:'Giurgiu,Romania|Plovdiv,Bulgaria|Kulata,Bulgaria', alt:'Constanta,Romania|Varna,Bulgaria|Burgas,Bulgaria' },
+  brasov:    { main:'Pitesti,Romania|Sofia,Bulgaria|Kulata,Bulgaria',   alt:'Craiova,Romania|Nis,Serbia|Skopje,North Macedonia' },
+  cluj:      { main:'Deva,Romania|Nis,Serbia|Skopje,North Macedonia',   alt:'Bucharest,Romania|Sofia,Bulgaria|Kulata,Bulgaria' },
+  timisoara: { main:'Belgrade,Serbia|Nis,Serbia|Skopje,North Macedonia',alt:'Craiova,Romania|Sofia,Bulgaria|Kulata,Bulgaria' },
+  craiova:   { main:'Calafat,Romania|Nis,Serbia|Gevgelija,North Macedonia', alt:'Giurgiu,Romania|Plovdiv,Bulgaria|Kulata,Bulgaria' },
+  iasi:      { main:'Bucharest,Romania|Sofia,Bulgaria|Kulata,Bulgaria', alt:'Galati,Romania|Plovdiv,Bulgaria|Kulata,Bulgaria' },
+  constanta: { main:'Varna,Bulgaria|Burgas,Bulgaria|Xanthi,Greece',     alt:'Bucharest,Romania|Sofia,Bulgaria|Kulata,Bulgaria' },
+  ploiesti:  { main:'Giurgiu,Romania|Plovdiv,Bulgaria|Kulata,Bulgaria', alt:'Craiova,Romania|Nis,Serbia|Skopje,North Macedonia' },
+};
+const ORIGIN_ADDR = { bucuresti:'Bucharest,Romania', cluj:'Cluj-Napoca,Romania', timisoara:'Timisoara,Romania', iasi:'Iasi,Romania', constanta:'Constanta,Romania', brasov:'Brasov,Romania', craiova:'Craiova,Romania', ploiesti:'Ploiesti,Romania' };
+const DEST_ADDR   = { thessaloniki:'Thessaloniki,Greece', halkidiki:'Chalkidiki,Greece', athens:'Athens,Greece', kavala:'Kavala,Greece', alexandroupoli:'Alexandroupoli,Greece', meteora:'Meteora,Greece', corfu:'Igoumenitsa,Greece', santorini:'Piraeus,Greece', crete:'Piraeus,Greece', thassos:'Kavala,Greece' };
+
+// ── OSRM routing ──────────────────────────────────────────────
+async function osrmRoute(coordKeys) {
+  const coords = coordKeys.map(k => COORDS[k]);
+  const coordStr = coords.map(c => c[0] + ',' + c[1]).join(';');
+  const url = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=false`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('OSRM error ' + res.status);
+  const data = await res.json();
+  if (!data.routes || !data.routes[0]) throw new Error('No route found');
+  return {
+    km: Math.round(data.routes[0].distance / 1000),
+    seconds: data.routes[0].duration
+  };
+}
+
+// ── Fuel cost calculation ──────────────────────────────────────
+function calcFuel(totalKm, split, ft, cons) {
+  if (ft === 'electric') return (totalKm / 100) * cons * 1.8;
+  let cost = 0;
+  const prices = FP[ft];
+  const s = COUNTRY_KM_SPLIT[split];
+  for (const cc in s) {
+    cost += (totalKm * s[cc] / 100) * cons * (prices[cc] || prices.ro);
+  }
+  return cost;
+}
+
+function fmt(n) { return Math.round(n).toLocaleString('ro-RO'); }
+function fmtH(s) { const h = Math.floor(s/3600), m = Math.round((s%3600)/60); return h + 'h' + (m ? ' ' + m + 'min' : ''); }
+function mapsUrl(origin, dest, wps) {
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&waypoints=${encodeURIComponent(wps)}&travelmode=driving`;
+}
+
+function renderCard(r, tag, destKey, ft, cons, pax, hasRov, originKey) {
+  const ferry = DEST_FERRY[destKey];
+  const ferryLei = ferry ? (ferry.carEur + ferry.passEur * pax) * EUR : 0;
+  const grToll = GR_TOLL[destKey] || 75;
+  const totalToll = r.tolls.filter(t => !(t.annual && hasRov)).reduce((a,t) => a + t.lei, 0) + grToll;
+  const grand = r.fuel + totalToll + ferryLei;
+
+  let cls = 'route-card', badgeCls = 'badge-gray', badgeText = 'Rută alternativă';
+  if (tag === 'cheapest') { cls += ' is-cheapest'; badgeCls = 'badge-green'; badgeText = '✓ Cea mai ieftină'; }
+  else if (tag === 'fastest')  { cls += ' is-fastest';  badgeCls = 'badge-blue';  badgeText = '⚡ Cea mai rapidă'; }
+
+  const grTollEur = GR_TOLL_EUR[destKey] || 0;
+  const tollBreakdown = r.tolls.filter(t => !(t.annual && hasRov)).map(t => t.note + ': ' + fmt(t.lei) + ' lei').join(' · ')
+    + ` · Taxe GR: ${grTollEur.toFixed(2)}€ (~${fmt(grToll)} lei)`;
+
+  const ferryHtml = ferry ? `<div class="seg-row">
+    <span class="seg-flag">⛴️</span>
+    <div class="seg-info">
+      <div class="seg-name">Ferry din ${ferry.endPoint === 'igoumenitsa' ? 'Igoumenitsa' : ferry.endPoint === 'piraeus' ? 'Pireu' : 'Keramoti'} (~${ferry.dur})</div>
+      <div class="seg-detail">Mașină ~${ferry.carEur}€ · per pasager ~${ferry.passEur}€</div>
+    </div>
+    <div class="seg-cost">${fmt(ferryLei)} lei</div>
+  </div>` : '';
+
+  const stopsHtml = r.stops.map((s,i) => `<div class="stop-item">
+    <div class="stop-num">${i+1}</div>
+    <div class="stop-body"><div class="stop-name">${s.name}</div><div class="stop-why">${s.why}</div></div>
+  </div>`).join('');
+
+  const mapWpStr = MAP_WPS[originKey] ? MAP_WPS[originKey][r.type] : '';
+  const mapUrl = mapsUrl(ORIGIN_ADDR[originKey], DEST_ADDR[destKey], mapWpStr);
+
+  return `<div class="${cls}">
+    <div class="rc-header">
+      <span class="rc-badge ${badgeCls}">${badgeText}</span>
+      <div class="rc-name">${r.label}</div>
+      <div class="rc-via">Via ${r.via}</div>
+      <div class="metric-row">
+        <div class="met"><div class="met-l">Total km</div><div class="met-v">${fmt(r.km)}</div></div>
+        <div class="met"><div class="met-l">Timp condus</div><div class="met-v">${fmtH(r.seconds)}</div></div>
+        <div class="met"><div class="met-l">Cost total</div><div class="met-v">${fmt(grand)} lei</div></div>
+      </div>
+    </div>
+    <div class="rc-segs">
+      <div class="seg-row">
+        <span class="seg-flag">🛣️</span>
+        <div class="seg-info">
+          <div class="seg-name">Combustibil pe tot traseul (${fmt(r.km)} km)</div>
+          <div class="seg-detail">${ft === 'electric' ? cons + ' kWh/100km · medie ~1.80 lei/kWh' : cons + ' l/100km · prețuri mixte pe țări'}</div>
+        </div>
+        <div class="seg-cost">${fmt(r.fuel)} lei</div>
+      </div>
+      <div class="seg-row">
+        <span class="seg-flag">🧾</span>
+        <div class="seg-info">
+          <div class="seg-name">Taxe și vignete</div>
+          <div class="seg-detail">${tollBreakdown}</div>
+        </div>
+        <div class="seg-cost">${fmt(totalToll)} lei</div>
+      </div>
+      ${ferryHtml}
+    </div>
+    <div class="rc-stops">
+      <div class="stops-heading">Stopuri recomandate</div>
+      ${stopsHtml}
+    </div>
+    <div class="rc-map">
+      <a class="map-btn" href="${mapUrl}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Deschide în Google Maps
+      </a>
+    </div>
+    <div class="rc-total">
+      <div class="total-main">
+        <span class="total-label">Total estimat (dus)</span>
+        <span class="total-value">${fmt(grand)} lei</span>
+      </div>
+      <div class="total-sub">Combustibil ${fmt(r.fuel)} lei · Taxe ${fmt(totalToll)} lei${ferryLei > 0 ? ' · Ferry ' + fmt(ferryLei) + ' lei' : ''}</div>
+      <div class="total-sub" style="margin-top:2px">Dus-întors (fără ferry): ~${fmt((r.fuel + totalToll) * 2 + ferryLei)} lei</div>
+    </div>
+  </div>`;
+}
+
+async function calc() {
+  const originKey = document.getElementById('origin').value;
+  const destKey   = document.getElementById('destination').value;
+  const ft        = document.getElementById('ftype').value;
+  const cons      = parseFloat(document.getElementById('cons').value) || 7.5;
+  const pax       = parseInt(document.getElementById('pax').value) || 2;
+  const hasRov    = document.getElementById('rov').checked;
+
+  const btn = document.getElementById('calcBtn');
+  const loading = document.getElementById('loadingBox');
+  const errBar = document.getElementById('errorBar');
+  const results = document.getElementById('results');
+
+  btn.disabled = true;
+  loading.style.display = 'block';
+  results.style.display = 'none';
+  errBar.innerHTML = '';
+
+  const cfg = ROUTE_DEFS[originKey];
+  const destCoordKey = DEST_COORD[destKey];
+
+  const setStep = (txt) => document.getElementById('loadingStep').textContent = txt;
+
+  try {
+    // Build full waypoint lists (add destination at end)
+    const mainWps = [...cfg.main.wps, destCoordKey];
+    const altWps  = [...cfg.alt.wps,  destCoordKey];
+
+    setStep('Se calculează Ruta 1 via ' + cfg.main.via + '...');
+    const mainOSRM = await osrmRoute(mainWps);
+
+    setStep('Se calculează Ruta 2 via ' + cfg.alt.via + '...');
+    const altOSRM  = await osrmRoute(altWps);
+
+    const mainFuel = calcFuel(mainOSRM.km, cfg.main.split, ft, cons);
+    const altFuel  = calcFuel(altOSRM.km,  cfg.alt.split,  ft, cons);
+
+    const grToll = GR_TOLL[destKey] || 75;
+    const ferry  = DEST_FERRY[destKey];
+    const ferryLei = ferry ? (ferry.carEur + ferry.passEur * pax) * EUR : 0;
+
+    const mainToll = cfg.main.tolls.filter(t => !(t.annual && hasRov)).reduce((a,t) => a+t.lei, 0) + grToll;
+    const altToll  = cfg.alt.tolls.filter(t  => !(t.annual && hasRov)).reduce((a,t) => a+t.lei, 0) + grToll;
+
+    const mainGrand = mainFuel + mainToll + ferryLei;
+    const altGrand  = altFuel  + altToll  + ferryLei;
+
+    const cheapest = mainGrand   <= altGrand   ? 'main' : 'alt';
+    const fastest  = mainOSRM.seconds <= altOSRM.seconds ? 'main' : 'alt';
+
+    let mainTag = '', altTag = '';
+    if (cheapest === fastest) {
+      mainTag = cheapest === 'main' ? 'cheapest' : '';
+      altTag  = cheapest === 'alt'  ? 'cheapest' : '';
+    } else {
+      mainTag = cheapest === 'main' ? 'cheapest' : (fastest === 'main' ? 'fastest' : '');
+      altTag  = cheapest === 'alt'  ? 'cheapest' : (fastest === 'alt'  ? 'fastest' : '');
+    }
+
+    const diffLei = Math.abs(Math.round(mainGrand - altGrand));
+    const diffMin = Math.abs(Math.round((mainOSRM.seconds - altOSRM.seconds) / 60));
+    const cheapName = cheapest === 'main' ? cfg.main.label : cfg.alt.label;
+    const fastName  = fastest  === 'main' ? cfg.main.label : cfg.alt.label;
+
+    let recom;
+    if (cheapest === fastest) {
+      recom = `<strong>${cheapName}</strong> este atât cea mai ieftină (cu <strong>${fmt(diffLei)} lei</strong>) cât și cea mai rapidă (cu <strong>${diffMin} min</strong>) — recomandată.`;
+    } else {
+      recom = `<strong>${cheapName}</strong> este mai ieftină cu <strong>${fmt(diffLei)} lei</strong>. &nbsp;·&nbsp; <strong>${fastName}</strong> este mai rapidă cu <strong>${diffMin} min</strong>.`;
+    }
+
+    const mainR = { ...cfg.main, type:'main', km: mainOSRM.km, seconds: mainOSRM.seconds, fuel: mainFuel };
+    const altR  = { ...cfg.alt,  type:'alt',  km: altOSRM.km,  seconds: altOSRM.seconds,  fuel: altFuel  };
+
+    document.getElementById('recomBanner').innerHTML = recom;
+    document.getElementById('compareGrid').innerHTML =
+      renderCard(mainR, mainTag, destKey, ft, cons, pax, hasRov, originKey) +
+      renderCard(altR,  altTag,  destKey, ft, cons, pax, hasRov, originKey);
+
+    loading.style.display = 'none';
+    results.style.display = 'block';
+    results.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  } catch (e) {
+    loading.style.display = 'none';
+    errBar.innerHTML = `<div class="error-bar">⚠️ Nu s-a putut calcula ruta: ${e.message}. Verifică conexiunea la internet și încearcă din nou.</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
