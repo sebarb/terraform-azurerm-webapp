@@ -1,0 +1,14 @@
+name: Test Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Afișează un mesaj
+        run: echo "Salut din GitHub Actions!"
