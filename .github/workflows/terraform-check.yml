@@ -32,6 +32,7 @@ jobs:
       - name: runt tflint
         run: tflint --recursive
       #9
-    
+      - name: checkov
+        uses: bridgecrewio/checkov-master@v12
 
 
