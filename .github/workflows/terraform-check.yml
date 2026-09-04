@@ -15,13 +15,19 @@ jobs:
         uses: hashicorp/setup-terraform@v4
       #3
       - name: terraform fmt
-        run: terraform fmt #check format
+        run: terraform fmt -check -recursive #check format
       #4
       - name: terraform init
         run: terraform init
       #5
       - name: terraform validate
         run: terraform validate
+      #6
+      - name: tflint setup
+        uses: terraform-linters/setup-tflint@v6
+      #7
+      - name: tflint init
+        run: tflint --init
 
 
 
