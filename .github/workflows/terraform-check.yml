@@ -34,5 +34,8 @@ jobs:
       #9
       - name: checkov
         uses: bridgecrewio/checkov-action@v12
+        with:
+            directory: .
+            framework: terraform
 
 
