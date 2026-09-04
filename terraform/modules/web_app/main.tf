@@ -1,6 +1,6 @@
 
 resource "azurerm_resource_group" "resource_group" {
-  name     = "rs-${var.application_name}-${var.environment_name}"
+  name     = "rg-${var.application_name}-${var.environment_name}"
   location = var.location
 }
 
