@@ -28,7 +28,10 @@ jobs:
       #7
       - name: tflint init
         run: tflint --init
-
-
+      #8
+      - name: runt tflint
+        run: tflint --recursive
+      #9
+    
 
 
