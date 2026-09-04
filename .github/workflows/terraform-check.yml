@@ -33,6 +33,6 @@ jobs:
         run: tflint --recursive
       #9
       - name: checkov
-        uses: bridgecrewio/checkov@v12
+        uses: bridgecrewio/checkov-action@v12
 
 
